@@ -500,8 +500,8 @@ def files_dirty():
 			if os.path.getmtime(f) != timestamps.get(f):
 				print(f + " dirty")
 				return True
-	else:
-		return False
+	
+	return False
 
 
 def compile_less():
