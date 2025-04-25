@@ -13,6 +13,23 @@ from frappe.utils.response import build_response
 from frappe.utils.data import sbool
 
 
+def api_method_handler(doctype):
+		frappe.local.form_dict.cmd = doctype
+		return frappe.handler.handle()
+
+
+def api_resource_handler(doctype, name):
+		if "run_method" in frappe.local.form_dict:
+				method = frappe.local.form_dict.pop("run_method")
+				doc = frappe.get_doc(doctype, name)
+				doc.is_whitelisted(method)
+
+				if frappe.local.request.method=="GET":
+						if not doc.has_permission("read"):
+								frappe.throw(_("Not permitted"), frappe.PermissionError)
+						frappe.local.response.update({"data": doc.run_method(method, **frappe.local.form_dict)})
+
+
 def handle():
 	"""
 	Handler for `/api` methods
@@ -50,20 +67,9 @@ def handle():
 		name = parts[3]
 
 	if call=="method":
-		frappe.local.form_dict.cmd = doctype
-		return frappe.handler.handle()
-
+		return api_method_handler(doctype)
 	elif call=="resource":
-		if "run_method" in frappe.local.form_dict:
-			method = frappe.local.form_dict.pop("run_method")
-			doc = frappe.get_doc(doctype, name)
-			doc.is_whitelisted(method)
-
-			if frappe.local.request.method=="GET":
-				if not doc.has_permission("read"):
-					frappe.throw(_("Not permitted"), frappe.PermissionError)
-				frappe.local.response.update({"data": doc.run_method(method, **frappe.local.form_dict)})
-
+		return api_resource_handler(doctype, name)
 			if frappe.local.request.method=="POST":
 				if not doc.has_permission("write"):
 					frappe.throw(_("Not permitted"), frappe.PermissionError)
