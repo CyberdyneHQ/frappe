@@ -121,12 +121,7 @@ def schedule_jobs_based_on_activity(check_time=None):
 		if not last_job_timestamp:
 			return True
 		else:
-			if ((check_time  or now_datetime()) - last_job_timestamp).total_seconds() >= 86400:
-				# one day is passed since jobs are run, so lets do this
-				return True
-			else:
-				# schedulers run in the last 24 hours, do nothing
-				return False
+			return bool(((check_time  or now_datetime()) - last_job_timestamp).total_seconds() >= 86400)
 	else:
 		# site active, lets run the jobs
 		return True

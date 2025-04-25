@@ -31,10 +31,7 @@ class OAuthWebRequestValidator(RequestValidator):
 			"OAuth Client", client_id, "redirect_uris"
 		).split(get_url_delimiter())
 
-		if redirect_uri in redirect_uris:
-			return True
-		else:
-			return False
+		return bool(redirect_uri in redirect_uris)
 
 	def get_default_redirect_uri(self, client_id, request, *args, **kwargs):
 		# The redirect used if none has been supplied.
