@@ -13,6 +13,8 @@
     </h5>
 </div>
 
+
+
 <div align="center">
 	<a href="https://github.com/frappe/frappe/actions/workflows/server-mariadb-tests.yml">
 		<img src="https://github.com/frappe/frappe/actions/workflows/server-mariadb-tests.yml/badge.svg">
