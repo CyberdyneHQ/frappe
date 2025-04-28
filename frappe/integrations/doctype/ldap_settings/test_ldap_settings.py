@@ -46,7 +46,7 @@ class LDAP_TestCase():
 
 		return wrapped
 
-	def clean_test_users():
+	def clean_test_users(self):
 		try: # clean up test user 1
 			frappe.get_doc("User", 'posix.user1@unit.testing').delete()
 		except Exception:
