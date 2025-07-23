@@ -810,10 +810,7 @@ class Column:
 			df = get_df_for_column_header(self.doctype, header_title)
 			# df = df_by_labels_and_fieldnames.get(header_title)
 
-		if not df:
-			skip_import = True
-		else:
-			skip_import = False
+		skip_import = bool(not df)
 
 		if header_title in self.seen:
 			self.warnings.append(

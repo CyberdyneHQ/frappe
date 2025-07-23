@@ -185,10 +185,7 @@ def process_2fa_for_sms(user, token, otp_secret):
 def process_2fa_for_otp_app(user, otp_secret, otp_issuer):
 	'''Process OTP App method for 2fa.'''
 	totp_uri = pyotp.TOTP(otp_secret).provisioning_uri(user, issuer_name=otp_issuer)
-	if frappe.db.get_default(user + '_otplogin'):
-		otp_setup_completed = True
-	else:
-		otp_setup_completed = False
+	otp_setup_completed = bool(frappe.db.get_default(user + '_otplogin'))
 
 	verification_obj = {
 		'method': 'OTP App',

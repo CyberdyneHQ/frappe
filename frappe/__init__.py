@@ -716,10 +716,7 @@ def only_has_select_perm(doctype, user=None, ignore_permissions=False):
 	import frappe.permissions
 	permissions = frappe.permissions.get_role_permissions(doctype, user=user)
 
-	if permissions.get('select') and not permissions.get('read'):
-		return True
-	else:
-		return False
+	return bool(permissions.get('select') and not permissions.get('read'))
 
 def has_permission(doctype=None, ptype="read", doc=None, user=None, verbose=False, throw=False):
 	"""Raises `frappe.PermissionError` if not permitted.
