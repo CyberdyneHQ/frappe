@@ -851,7 +851,7 @@ def fmt_money(amount, precision=None, currency=None, format=None):
 		parts.append(amount[-3:])
 		amount = amount[:-3]
 
-		val = number_format=="#,##,###.##" and 2 or 3
+		val = 2 if number_format=="#,##,###.##" else 3
 
 		while len(amount) > val:
 			parts.append(amount[-val:])

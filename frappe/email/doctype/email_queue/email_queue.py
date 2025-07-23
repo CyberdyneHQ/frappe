@@ -168,17 +168,16 @@ class SendMailContext:
 		self.log_exception(exc_type, exc_val, exc_tb)
 
 		if exc_type in exceptions:
-			email_status = (self.sent_to and 'Partially Sent') or 'Not Sent'
+			email_status = 'Partially Sent' if self.sent_to else 'Not Sent'
 			self.queue_doc.update_status(status = email_status, commit = True)
 		elif exc_type:
 			if self.queue_doc.retry < MAX_RETRY_COUNT:
 				update_fields = {'status': 'Not Sent', 'retry': self.queue_doc.retry + 1}
 			else:
-				update_fields = {'status': (self.sent_to and 'Partially Errored') or 'Error'}
+				update_fields = {'status': 'Partially Errored' if self.sent_to else 'Error'}
 			self.queue_doc.update_status(**update_fields, commit = True)
 		else:
-			email_status = self.is_mail_sent_to_all() and 'Sent'
-			email_status = email_status or (self.sent_to and 'Partially Sent') or 'Not Sent'
+			email_status = 'Sent' if self.is_mail_sent_to_all() else ('Partially Sent' if self.sent_to else 'Not Sent')
 
 			update_fields = {'status': email_status}
 			if self.email_account_doc.is_exists_in_db():

@@ -478,7 +478,7 @@ class Database(object):
 						return []
 
 			if as_dict:
-				return values and [values] or []
+				return [values] if values else []
 
 			if isinstance(fields, list):
 				return [map(values.get, fields)]
@@ -487,7 +487,7 @@ class Database(object):
 			r = self.sql("""select field, value
 				from `tabSingles` where field in (%s) and doctype=%s"""
 					% (', '.join(['%s'] * len(fields)), '%s'),
-					tuple(fields) + (doctype,), as_dict=False, debug=debug)
+				tuple(fields) + (doctype,), as_dict=False, debug=debug)
 
 			if as_dict:
 				if r:
@@ -498,7 +498,7 @@ class Database(object):
 				else:
 					return []
 			else:
-				return r and [[i[1] for i in r]] or []
+				return [[i[1] for i in r]] if r else []
 
 
 	def get_singles_dict(self, doctype, debug = False):
